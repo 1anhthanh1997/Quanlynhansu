@@ -225,7 +225,7 @@ public class QuantrihethongController implements Initializable {
 	    			loadDataFromDatabase();
 	    		} else {
 	    			data.clear();
-		    		String sql = "select * from dangnhap where Name LIKE '%" + jtfsearch.getText() + "%'";		
+		    		String sql = "select * from dangnhap where ID LIKE '%" + jtfsearch.getText() + "%' or Name LIKE '%" + jtfsearch.getText() + "%'";		
 		    		try {
 						pst = con.prepareStatement(sql);
 						ResultSet rs = pst.executeQuery();

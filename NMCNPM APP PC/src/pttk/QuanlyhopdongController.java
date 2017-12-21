@@ -13,79 +13,62 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.Node;
 import javax.swing.JOptionPane;
-import Model.QuanlynhansuInfo;
-import Model.Quantrihethonginfo;
+import Model.Quanlyhopdonginfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;;
 
-public class QuanlynhansuController implements Initializable {
+public class QuanlyhopdongController implements Initializable {
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
 	boolean test;
 	@FXML
 	private TextField jtfID;
-	@FXML
-	private RadioButton rdnam;
-	@FXML
-	private RadioButton rdnu;
-	@FXML
-    private ToggleGroup tggender;
+
 	@FXML
 	private TextField jtfname;
 	@FXML
-	private TextField jtfaddress;
+	private TextField jtfID2;
 	@FXML
-	private TextField jtfdateofbirth;
+	private TextField jtftype;
 	@FXML
-	private TextField jtfphonenumber;
+	private TextField jtfdateofsigning;
 	@FXML
-	private TextField jtfemail;
+	private TextField jtfexpirationdate;
 	@FXML
-	private TextField jtfdepartment;
-	@FXML
-	private TextField jtfCMT;
-	@FXML
-	private TextField jtfposition;
+	private TextField jtfsalary;
 	@FXML
 	private TextField jtfsearch;
+	
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colID;
+	private TableColumn<Quanlyhopdonginfo, String> colID;
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colGender;
+	private TableColumn<Quanlyhopdonginfo, String> colName;
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colName;
+	private TableColumn<Quanlyhopdonginfo, String> colID2;
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colAddress;
+	private TableColumn<Quanlyhopdonginfo, String> colType;
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colDateofbirth;
+	private TableColumn<Quanlyhopdonginfo, String> colDateofsigning;
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colPhonenumber;
+	private TableColumn<Quanlyhopdonginfo, String> colExpirationdate;
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colEmail;
+	private TableColumn<Quanlyhopdonginfo, String> colSalary;
+	
 	@FXML
-	private TableColumn<Quantrihethonginfo, String> colDepartment;
-	@FXML
-	private TableColumn<Quantrihethonginfo, String> colCMT;
-	@FXML
-	private TableColumn<Quantrihethonginfo, String> colPosition;
-	@FXML
-	private TableView<QuanlynhansuInfo> tableView2;
-	private QuanlynhansuInfo nhansu;
-	private ObservableList<QuanlynhansuInfo> data=FXCollections.observableArrayList(); 
+	private TableView<Quanlyhopdonginfo> tableView3;
+	private Quanlyhopdonginfo hopdong;
+	private ObservableList<Quanlyhopdonginfo> data=FXCollections.observableArrayList(); 
 	private String username;
 	private String position;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		con=dba.DBConnection.myConnection();
@@ -93,6 +76,7 @@ public class QuanlynhansuController implements Initializable {
 		search();
 		getusername();
 		getposition();
+		
 	}
 	private void getusername() {
 		try {
@@ -127,44 +111,32 @@ public class QuanlynhansuController implements Initializable {
 	private void add(ActionEvent event) throws SQLException {
 		if(position.equals("Quản lý nhân sự")) {
 		String ID=jtfID.getText();
-		String gender = null;
-		  if(rdnam.isSelected()) {
-	  		   gender="Nam";
-	  	   }
-	  	   else if(rdnu.isSelected()) {
-	  		   gender="Nữ";
-	  	   }
 		String name=jtfname.getText();
-		String dateofbirth=jtfdateofbirth.getText();
-		String phonenumber=jtfphonenumber.getText();
-		String email=jtfemail.getText();
-		String department=jtfdepartment.getText();
-		String address=jtfaddress.getText();
-		String CMT=jtfCMT.getText();
-		String position=jtfposition.getText();
+		String ID2=jtfID2.getText();
+		String type=jtftype.getText();
+		String dateofsigning=jtfdateofsigning.getText();
+		String expirationdate=jtfexpirationdate.getText();
+		String salary=jtfsalary.getText();
+		
 		test=true;
-		if(ID.equals(null)||ID.equals("")||gender.equals(null)||gender.equals("")||name.equals(null)||name.equals("")||
-				address.equals(null)||address.equals("")||dateofbirth.equals(null)||dateofbirth.equals("")||phonenumber.equals(null)||
-				phonenumber.equals("")||email.equals(null)||email.equals("")||department.equals(null)||department.equals("")||
-				CMT.equals(null)||CMT.equals("")||position.equals(null)||position.equals("")) {
+		if(ID.equals(null)||ID.equals("")||name.equals(null)||name.equals("")||	ID2.equals(null)||ID2.equals("")||type.equals(null)||type.equals("")||dateofsigning.equals(null)||
+				dateofsigning.equals("")||expirationdate.equals(null)||expirationdate.equals("")||salary.equals(null)||salary.equals("")) {
 			JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
 			test =false;
 		}
 		if(test) {
-			int xacnhan=JOptionPane.showConfirmDialog(null,"Bạn thực sự muốn thêm nhân viên?","Xác nhận",JOptionPane.YES_NO_OPTION);
+			int xacnhan=JOptionPane.showConfirmDialog(null,"Bạn thực sự muốn thêm hợp đồng?","Xác nhận",JOptionPane.YES_NO_OPTION);
 			if(xacnhan==JOptionPane.YES_OPTION) {
 		try {
-		pst=con.prepareStatement("insert into quanlynhansu(ID,gender,name,address,dateofbirth,phonenumber,email,department,CMT,position)values(?,?,?,?,?,?,?,?,?,?)" );
+		pst=con.prepareStatement("insert into quanlyhopdong(ID,name,ID2,type,dateofsigning,expirationdate,salary)values(?,?,?,?,?,?,?)" );
 		pst.setString(1, ID);
-		pst.setString(2, gender);
-		pst.setString(3, name);
-		pst.setString(4, address);
-		pst.setString(5, dateofbirth);
-		pst.setString(6, phonenumber);
-		pst.setString(7, email);
-		pst.setString(8, department);
-		pst.setString(9, CMT);
-		pst.setString(10, position);
+		pst.setString(2, name);
+		pst.setString(3, ID2);
+		pst.setString(4, type);
+		pst.setString(5, dateofsigning);
+		pst.setString(6, expirationdate);
+		pst.setString(7, salary);
+		
 		 if (pst.executeUpdate() > 0) {
              JOptionPane.showMessageDialog(null, "Thêm thành công!");
      } else {
@@ -188,52 +160,39 @@ public class QuanlynhansuController implements Initializable {
 	}
 	@FXML
 	private void edit(ActionEvent event)throws SQLException{
+		if(position.equals("Quản lý nhân sự")) {
 		//tableView.getItems().clear();
 		//con=dba.DBConnection.myConnection();
-		if(position.equals("Quản lý nhân sự")) {
-		   String sqlCommand = "update  quanlynhansu set gender=?,name=?,address=?,dateofbirth=?,phonenumber=?,email=?,department=?,CMT=?,position=?  where ID=?";
+		   String sqlCommand = "update  quanlynhansu set name=?,ID2=?,type=?,dateofsigning=?,expirationdate=?,salary=?  where ID=?";
 	               
 		   PreparedStatement pst = null;
-		   String ID=jtfID.getText();
-		   String gender=null;
-			  if(rdnam.isSelected()) {
-		  		   gender="Nam";
-		  	   }
-		  	   else if(rdnu.isSelected()) {
-		  		   gender="Nữ";
-		  	   }
+		   	 
+			String ID=jtfID.getText();
 			String name=jtfname.getText();
-			String dateofbirth=jtfdateofbirth.getText();
-			String phonenumber=jtfphonenumber.getText();
-			String email=jtfemail.getText();
-			String department=jtfdepartment.getText();
-			String address=jtfaddress.getText();
-			String CMT=jtfCMT.getText();
-			String position=jtfposition.getText();
+			String ID2=jtfID2.getText();
+			String type=jtftype.getText();
+			String dateofsigning=jtfdateofsigning.getText();
+			String expirationdate=jtfexpirationdate.getText();
+			String salary=jtfsalary.getText();
 		   test=true;
-		   if(ID.equals(null)||ID.equals("")||gender.equals(null)||gender.equals("")||name.equals(null)||name.equals("")||
-					address.equals(null)||address.equals("")||dateofbirth.equals(null)||dateofbirth.equals("")||phonenumber.equals(null)||
-					phonenumber.equals("")||email.equals(null)||email.equals("")||department.equals(null)||department.equals("")||
-					CMT.equals(null)||CMT.equals("")||position.equals(null)||position.equals("")) {
+		   if(ID.equals(null)||ID.equals("")||name.equals(null)||name.equals("")||	ID2.equals(null)||ID2.equals("")||type.equals(null)||type.equals("")||dateofsigning.equals(null)||
+					dateofsigning.equals("")||expirationdate.equals(null)||expirationdate.equals("")||salary.equals(null)||salary.equals("")) {
 				JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
 				test =false;
 			}
 			if(test) {
 				int xacnhan=JOptionPane.showConfirmDialog(null,"Bạn thực sự muốn sửa thông tin?","Xác nhận",JOptionPane.YES_NO_OPTION);
 				if(xacnhan==JOptionPane.YES_OPTION) {
-	  	 
 	try {
 	       pst = con.prepareStatement(sqlCommand);
-	       pst.setString(10, ID);
-			pst.setString(1, gender);
-			pst.setString(2, name);
-			pst.setString(3, address);
-			pst.setString(4, dateofbirth);
-			pst.setString(5, phonenumber);
-			pst.setString(6, email);
-			pst.setString(7, department);
-			pst.setString(8, CMT);
-			pst.setString(9, position);
+	       pst.setString(7, ID);
+			pst.setString(1, name);
+			pst.setString(2, ID2);
+			pst.setString(3, type);
+			pst.setString(4, dateofsigning);
+			pst.setString(5, expirationdate);
+			pst.setString(6, salary);
+			
 	       if (pst.executeUpdate() > 0) {
 	               JOptionPane.showMessageDialog(null, "Sửa thành công!");
 	       } else {
@@ -251,20 +210,20 @@ public class QuanlynhansuController implements Initializable {
 			loadDataFromDatabase();
 			jtfID.setDisable(false);
 		}
-			
 
 	}
 	@FXML
     private void loadDataFromDatabase() {
-    	tableView2.getItems().clear();
+		
+    	tableView3.getItems().clear();
         try {
             //Connection conn = dc.Connect();
            // data = FXCollections.observableArrayList();
             // Execute query and store result in a resultset
-            ResultSet rs = con.createStatement().executeQuery("SELECT * FROM quanlynhansu");
+            ResultSet rs = con.createStatement().executeQuery("SELECT * FROM quanlyhopdong");
             while (rs.next()) {
                 //get string from db,whichever way 
-                data.add(new QuanlynhansuInfo(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10)));
+                data.add(new Quanlyhopdonginfo(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
             }
 
         } catch (SQLException ex) {
@@ -274,39 +233,35 @@ public class QuanlynhansuController implements Initializable {
         //Set cell value factory to tableview.
         //NB.PropertyValue Factory must be the same with the one set in model class.
         colID.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-        colDateofbirth.setCellValueFactory(new PropertyValueFactory<>("dateofbirth"));
-        colPhonenumber.setCellValueFactory(new PropertyValueFactory<>("phonenumber"));
-        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
-        colCMT.setCellValueFactory(new PropertyValueFactory<>("CMT"));
-        colPosition.setCellValueFactory(new PropertyValueFactory<>("position"));
+        colID2.setCellValueFactory(new PropertyValueFactory<>("ID2"));
+        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colDateofsigning.setCellValueFactory(new PropertyValueFactory<>("dateofsigning"));
+        colExpirationdate.setCellValueFactory(new PropertyValueFactory<>("expirationdate"));
+        colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+       
         
         
-        tableView2.setItems(null);
-        tableView2.setItems(data);
+        tableView3.setItems(null);
+        tableView3.setItems(data);
         jtfID.setText("");
-        rdnam.setSelected(false);
-        rdnu.setSelected(false);
+       
    	   	jtfname.setText("");
-   	    jtfaddress.setText("");
-   	    jtfdateofbirth.setText("");
-   	    jtfphonenumber.setText("");
-   	    jtfemail.setText("");
-   	    jtfdepartment.setText("");
-   	    jtfCMT.setText("");
-   	    jtfposition.setText("");
-   	 
+   	    jtfID2.setText("");
+   	    jtftype.setText("");
+   	    jtfdateofsigning.setText("");
+   	    jtfexpirationdate.setText("");
+   	    jtfsalary.setText("");
+   	   
     }
 	@FXML
 	private void delete(ActionEvent event)throws SQLException{
 			//tableView.getItems().clear();
-		int xacnhan=JOptionPane.showConfirmDialog(null,"Bạn thực sự muốn xóa thông tin?","Xác nhận",JOptionPane.YES_NO_OPTION);
-		if(xacnhan==JOptionPane.YES_OPTION) {
 		if(position.equals("Quản lý nhân sự")) {	
-		   String sqlCommand = "delete from  quanlynhansu where ID=? ";
+		int xacnhan=JOptionPane.showConfirmDialog(null,"Bạn thực sự muốn xóa hợp đồng?","Xác nhận",JOptionPane.YES_NO_OPTION);
+		if(xacnhan==JOptionPane.YES_OPTION) {
+			
+		   String sqlCommand = "delete from  quanlyhopdong where ID=? ";
 	               
 		   PreparedStatement pst = null;
 		   
@@ -339,27 +294,16 @@ public class QuanlynhansuController implements Initializable {
 	@FXML
     public void tableClick(MouseEvent e) {
         //if (MouseButton.PRIMARY == e.getButton()) {
-            nhansu= tableView2.getSelectionModel().getSelectedItem();
-            jtfID.setText(nhansu.getID());
-            String gender=nhansu.getGender();
-                    
-            
-            if (gender.equals("Nam")) {
-                rdnam.setSelected(true);
-            } else {
-                rdnu.setSelected(true);
-            }
-            jtfaddress.setText(nhansu.getAddress());
-            jtfname.setText(nhansu.getName());
-            jtfdateofbirth.setText(nhansu.getDateofbirth());
-            jtfphonenumber.setText(nhansu.getPhonenumber());
-            jtfemail.setText(nhansu.getEmail());
-            jtfdepartment.setText(nhansu.getDepartment());
-            jtfCMT.setText(nhansu.getCMT());
-            jtfposition.setText(nhansu.getPosition());
-           
-            
-      jtfID.setDisable(true);
+            hopdong= tableView3.getSelectionModel().getSelectedItem();
+            jtfID.setText(hopdong.getID());
+             
+            jtfname.setText(hopdong.getName());
+            jtfID2.setText(hopdong.getID2());
+            jtftype.setText(hopdong.getType());
+            jtfdateofsigning.setText(hopdong.getDateofsigning());
+            jtfexpirationdate.setText(hopdong.getExpirationdate());
+            jtfsalary.setText(hopdong.getSalary());
+            jtfID.setDisable(true);
     }
 	 private void search() {
 			jtfsearch.setOnKeyReleased(e->{
@@ -367,14 +311,14 @@ public class QuanlynhansuController implements Initializable {
 	    			loadDataFromDatabase();
 	    		} else {
 	    			data.clear();
-		    		String sql = "select * from quanlynhansu where Name LIKE '%" + jtfsearch.getText() + "%'";		
+		    		String sql = "select * from quanlyhopdong where ID LIKE '%" + jtfsearch.getText() + "%' or Name LIKE '%" + jtfsearch.getText() + "%'";		
 		    		try {
 						pst = con.prepareStatement(sql);
 						ResultSet rs = pst.executeQuery();
 						while (rs.next()) {
-							 data.add(new QuanlynhansuInfo(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10)));
+							 data.add(new Quanlyhopdonginfo(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
 						}
-						tableView2.setItems(data);
+						tableView3.setItems(data);
 					} catch (SQLException e1) {
 						Logger.getLogger(QuantrihethongController.class.getName()).log(Level.SEVERE, null, e1);
 					}
@@ -413,5 +357,54 @@ public class QuanlynhansuController implements Initializable {
 			stage.setScene(scene);
 			stage.show();
 	  }
-
+	  @FXML
+	    public void test(ActionEvent e) {
+		  if(position.equals("Quản lý nhân sự")) {	
+		  String name=null;
+		 
+		  ResultSet rs;
+		try {
+			rs = con.createStatement().executeQuery("select name from quanlynhansu where BINARY ID LIKE '%" + jtfID.getText() + "%'");
+			  while (rs.next()) {
+				 name=rs.getString(1);
+				
+	   	          }
+		 } catch (SQLException ex) {
+	            System.err.println("Error"+ex);
+	        }
+      if(name==null) {
+      	JOptionPane.showMessageDialog(null, "Mã nhân viên không tồn tại!");
+      	jtfID.setText("");
+      	jtfname.setText("");
+      	jtfname.setDisable(false);
+      }
+      else {
+      	try {
+  			rs = con.createStatement().executeQuery("select * from quanlyhopdong where BINARY ID LIKE '%" + jtfID.getText() + "%'");
+  			  if(rs.next()) {
+  				  JOptionPane.showMessageDialog(null,"Hợp đồng của nhân viên này đã tồn tại!" );
+  				  jtfID.setText("");
+  				  jtfname.setText("");
+  				  jtfname.setDisable(false);
+  				  
+  			  }
+  			  else {
+  				  JOptionPane.showMessageDialog(null, "Mã nhân viên tồn tại và có thể thêm hợp đồng mới!");
+  					 jtfname.setText(name);
+  			       	 jtfname.setDisable(true);
+  				    
+  			  }
+  		 } catch (SQLException ex) {
+  	            System.err.println("Error"+ex);
+  	        }
+      
+      }
+	    }
+		  else {
+	    		JOptionPane.showMessageDialog(null, "Chỉ có quản lý nhân sự mới được chỉnh sửa thông tin ở trang này!");
+	    		jtfID.setText("");
+	    		jtfID.setDisable(false);
+		    	loadDataFromDatabase();
+	    	}
+	  }
 }
